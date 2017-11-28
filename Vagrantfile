@@ -5,7 +5,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "ubuntu/wily64"
+  config.vm.box = "ubuntu/xenial64"
 
   # Configure forwarded ports
   config.vm.network "forwarded_port", guest: 2181, host: 2181 # Zookeeper
@@ -19,8 +19,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.cpus = "2"
   end
 
+  config.vm.provision "shell",
+    inline: "sudo ln -s /usr/bin/python3 /usr/bin/python"
+
   config.vm.provision "ansible" do |ansible|
     ansible.sudo = true
+    # ansible.compatibility_mode = "2.0"
     ansible.playbook = "ansible/playbook.yml"
   end
 end
